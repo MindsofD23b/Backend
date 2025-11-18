@@ -1,0 +1,1 @@
+export const AddUp = (a, b) => Number(a) + Number(b);
