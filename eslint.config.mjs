@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(
   // Globale Ignore patterns, falls nötig
   {
-    ignores: ["dist", "node_modules"],
+    ignores: ["dist", "node_modules", "srv"],
   },
 
   // Basis JS Regeln von ESLint
