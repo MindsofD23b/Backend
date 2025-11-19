@@ -13,22 +13,6 @@
     "start": "node server.js",
     "lint": "eslint"
   },
-  "jest": {
-    "testEnvironment": "node",
-    "transform": {},
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "json"
-    ],
-    "testMatch": [
-      "**/__tests__/**/*.js",
-      "**/?(*.)+(spec|test).js"
-    ],
-    "verbose": true
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
