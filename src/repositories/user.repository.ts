@@ -9,4 +9,10 @@ export const userRepository = {
             data: { email, passwordHash },
         });
     },
+        update_lastLogin(userId: string, lastLogin: Date) {
+            return prisma.user.update({
+                where: { id: userId },
+                data: { lastLogin },
+            });
+        },
 };

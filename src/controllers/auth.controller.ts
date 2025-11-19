@@ -36,3 +36,21 @@ export const loginController = async (
         }
     }
 };
+
+export const getUserByEmailController = async (
+    req: Request,
+    res: Response,
+    _next: NextFunction
+) => {
+    try {
+        const email = req.body.email;
+        const user = await authService.getUserByEmail(email);
+        res.json({ user });
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            res.status(400).json({ error: err.message });
+        } else {
+            res.status(400).json({ error: "Unknown error" });
+        }
+    }
+}

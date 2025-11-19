@@ -21,7 +21,15 @@ export const authService = {
         if (!valid) {
             throw new Error("Invalid credentials");
         }
-
+        await userRepository.update_lastLogin(user.id, new Date());
         return user;
     },
+
+    async getUserByEmail(email: string) {
+        const user = await userRepository.findByEmail(email);
+        if (!user){
+            throw new Error("User not found");
+        }
+        return user;
+    }
 };
