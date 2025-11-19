@@ -15,13 +15,13 @@ describe("authService.login", () => {
 
     it("wirft fehler bei falschem passwort", async () => {
         (userRepository.findByEmail as jest.Mock).mockResolvedValue({
-        id: "user-1",
-        email: "test@test.ch",
-        passwordHash: "hashed",
-    });
+            id: "user-1",
+            email: "test@test.ch",
+            passwordHash: "hashed",
+        });
         (bcrypt.compare as jest.Mock).mockResolvedValue(false);
         await expect(
-            authService.login("test@test.ch", "wrong") 
+            authService.login("test@test.ch", "wrong")
         ).rejects.toThrow("Invalid credentials");
     });
 
@@ -35,8 +35,16 @@ describe("authService.login", () => {
         (bcrypt.compare as jest.Mock).mockResolvedValue(true);
         (userRepository.update_lastLogin as jest.Mock).mockResolvedValue(undefined);
 
-        const user = await authService.login("test@test.ch", "correct");
-        expect(user.id).toBe("user-1");
+        const result = await authService.login("test@test.ch", "correct");
+
+        // result = { user, token }
+        expect(result).toHaveProperty("user");
+        expect(result).toHaveProperty("token");
+
+        expect(result.user.id).toBe("user-1");
+        expect(result.user.email).toBe("test@test.ch");
+        expect(typeof result.token).toBe("string");
+
         expect(userRepository.update_lastLogin).toHaveBeenCalledTimes(1);
         expect(userRepository.update_lastLogin).toHaveBeenCalledWith(
             "user-1",
