@@ -44,3 +44,55 @@ describe("authService.login", () => {
         );
     });
 });
+
+describe("authService.register", () => {
+    it("erstellt neuen benutzer mit gehashtem passwort", async () => {
+        const email = "test@domain.ch";
+        const password = "plain-password";
+
+        (userRepository.findByEmail as jest.Mock).mockResolvedValue(null);
+
+        (bcrypt.hash as jest.Mock).mockResolvedValue("hashed-password");
+
+        (userRepository.create as jest.Mock).mockResolvedValue({
+            id: "user-1",
+            email,
+            passwordHash: "hashed-password",
+        });
+
+        const user = await authService.register(email, password);
+
+        expect(userRepository.findByEmail).toHaveBeenCalledTimes(1);
+        expect(userRepository.findByEmail).toHaveBeenCalledWith(email);
+
+        expect(bcrypt.hash).toHaveBeenCalledTimes(1);
+        expect(bcrypt.hash).toHaveBeenCalledWith(password, 10);
+
+        expect(userRepository.create).toHaveBeenCalledTimes(1);
+        expect(userRepository.create).toHaveBeenCalledWith(
+            email,
+            "hashed-password"
+        );
+
+        expect(user.id).toBe("user-1");
+        expect(user.email).toBe(email);
+    });
+
+    it("wirft fehler bei bereits existierender email", async () => {
+        const email = "existing@domain.ch";
+        const password = "some-password";
+
+        (userRepository.findByEmail as jest.Mock).mockResolvedValue({
+            id: "user-1",
+            email,
+            passwordHash: "already-there",
+        });
+
+        await expect(
+            authService.register(email, password)
+        ).rejects.toThrow("Email already in use");
+
+        expect(bcrypt.hash).not.toHaveBeenCalled();
+        expect(userRepository.create).not.toHaveBeenCalled();
+    });
+});
