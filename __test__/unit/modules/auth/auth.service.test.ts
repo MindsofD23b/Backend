@@ -1,8 +1,6 @@
 import { authService } from "../../../../src/services/auth.service";
 import { userRepository } from "../../../../src/repositories/user.repository";
 import bcrypt from "bcryptjs";
-import { id } from "../../../../jest.config.cjs";
-
 
 jest.mock("../../../../src/repositories/user.repository");
 jest.mock("bcryptjs");
@@ -39,7 +37,7 @@ describe("authService.login", () => {
 
         const user = await authService.login("test@test.ch", "correct");
         expect(user.id).toBe("user-1");
-        expect(userRepository.update_lastLogin).toHaveBeenCalledWith(1);
+        expect(userRepository.update_lastLogin).toHaveBeenCalledTimes(1);
         expect(userRepository.update_lastLogin).toHaveBeenCalledWith(
             "user-1",
             expect.any(Date)
