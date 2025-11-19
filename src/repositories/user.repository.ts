@@ -6,7 +6,7 @@ export const userRepository = {
     },
     create(email: string, passwordHash: string) {
         return prisma.user.create({
-            data: { email, password: passwordHash },
+            data: { email, passwordHash },
         });
     },
 };
