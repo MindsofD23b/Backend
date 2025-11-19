@@ -4,10 +4,7 @@ module.exports = {
     testEnvironment: "node",
     rootDir: ".",
     moduleFileExtensions: ["ts", "js", "json"],
-    testMatch: [
-        "<rootDir>/tests/**/*.test.ts"
-    ],
-    // Damit Jest deine Pfade besser auflöst
+    testMatch: ["<rootDir>/tests/**/*.test.ts"],
     moduleNameMapper: {
         "^src/(.*)$": "<rootDir>/src/$1",
     },
