@@ -6,7 +6,13 @@ export const userRepository = {
     },
     create(email: string, passwordHash: string) {
         return prisma.user.create({
-            data: { email, password: passwordHash },
+            data: { email, passwordHash },
         });
     },
+        update_lastLogin(userId: string, lastLogin: Date) {
+            return prisma.user.update({
+                where: { id: userId },
+                data: { lastLogin },
+            });
+        },
 };

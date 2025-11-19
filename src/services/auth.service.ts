@@ -17,11 +17,19 @@ export const authService = {
         if (!user) {
             throw new Error("Invalid credentials");
         }
-        const valid = await bcrypt.compare(password, user.password);
+        const valid = await bcrypt.compare(password, user.passwordHash);
         if (!valid) {
             throw new Error("Invalid credentials");
         }
-
+        await userRepository.update_lastLogin(user.id, new Date());
         return user;
     },
+
+    async getUserByEmail(email: string) {
+        const user = await userRepository.findByEmail(email);
+        if (!user){
+            throw new Error("User not found");
+        }
+        return user;
+    }
 };
