@@ -20,7 +20,7 @@ model User {
   role         String    @default("user")
   locale       String    @default("en")
   timezone     String    @default("UTC")
-  emailVerifiedAt DateTime? @map("email_verified_at")
+  emailVerifiedAt DateTime?  @map("email_verified_at")
 
   profile UserProfile?
   servers Server[]

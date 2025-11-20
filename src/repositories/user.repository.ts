@@ -19,4 +19,15 @@ export const userRepository = {
         });
     },
 
+    verifyEmail(userId: string) {
+        const now = new Date();
+        return prisma.user.update({
+            where: { id: userId },
+            data: {
+                status: "active",
+                emailVerifiedAt: new Date(),
+                updatedAt: now,
+            } as any,
+        });
+    },
 };
