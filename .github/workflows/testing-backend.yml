@@ -12,6 +12,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Show all files recursively
+        run: ls -R
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -24,4 +29,3 @@ jobs:
 
       - name: Run Make Test
         run: make test
-
