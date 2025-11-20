@@ -1,2 +1,1 @@
--- AlterTable
-ALTER TABLE "users" ADD COLUMN     "email_verified_at" TIMESTAMP(3);
+ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "email_verified_at" TIMESTAMP NULL;

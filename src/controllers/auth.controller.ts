@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { authService } from "../services/auth.service";
-import { AuthRequest } from "../middleware/auth.middleware";
 
 export const registerController = async (
     req: Request,
@@ -27,16 +26,8 @@ export const loginController = async (
 ) => {
     try {
         const { email, password } = req.body;
-        const { user, token } = await authService.login(email, password);
-
-        res.json({
-            token,
-            user: {
-                id: user.id,
-                email: user.email,
-                role: user.role,
-            },
-        });
+        const user = await authService.login(email, password);
+        res.json({ id: user.id, email: user.email });
     } catch (err: unknown) {
         if (err instanceof Error) {
             res.status(400).json({ error: err.message });
@@ -45,7 +36,6 @@ export const loginController = async (
         }
     }
 };
-
 
 export const getUserByEmailController = async (
     req: Request,
@@ -64,31 +54,3 @@ export const getUserByEmailController = async (
         }
     }
 }
-
-
-export const meController = async (
-    req: AuthRequest,
-    res: Response,
-    _next: NextFunction
-) => {
-    try {
-        if (!req.user) {
-            return res.status(401).json({ error: "Unauthorized" });
-        }
-
-        const user = await authService.getUserById(req.user.sub);
-
-        res.json({
-            id: user.id,
-            email: user.email,
-            role: user.role,
-            status: user.status,
-        });
-    } catch (err: unknown) {
-        if (err instanceof Error) {
-            res.status(400).json({ error: err.message });
-        } else {
-            res.status(400).json({ error: "Unknown error" });
-        }
-    }
-};

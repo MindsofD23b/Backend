@@ -4,25 +4,34 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  // Globale Ignore patterns, falls nötig
+  // Global ignore patterns
   {
     ignores: ["dist", "node_modules", "srv"],
   },
 
-  // Basis JS Regeln von ESLint
+  // Base JS rules
   js.configs.recommended,
 
-  // TypeScript ESLint Standardkonfiguration
+  // TypeScript ESLint defaults
   ...tseslint.configs.recommended,
 
-  // Projekt spezifische Anpassungen
+  // Global settings (apply to ALL files, including server.js)
+  {
+    languageOptions: {
+      globals: {
+        ...globals.node,   // <-- FIX: makes process & console recognized
+      },
+    },
+  },
+
+  // Project-specific override for source files
   {
     files: ["src/**/*.{ts,tsx,js,mjs,cjs}"],
     languageOptions: {
       parserOptions: {
         sourceType: "module",
         ecmaVersion: "latest",
-        project: "./tsconfig.json", // optional, falls du type aware linting willst
+        project: "./tsconfig.json",
       },
       globals: {
         ...globals.node,
@@ -32,11 +41,8 @@ export default tseslint.config(
     rules: {
       "@typescript-eslint/no-unused-vars": [
         "error",
-        {
-          argsIgnorePattern: "^_",
-        },
+        { argsIgnorePattern: "^_" }
       ],
-      // weitere projektspezifische Regeln bei Bedarf
     },
   }
 );
