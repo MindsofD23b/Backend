@@ -20,6 +20,7 @@ run: build
 	$(DOCKER) run -d --name $(CONTAINER_NAME) -p 5679:5679 $(IMAGE_NAME):latest
 
 export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/testdb?schema=public
+export JWT_SECRET="TESTSECRET"
 
 test:
 	$(DOCKER) run -d --rm \
