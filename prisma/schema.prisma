@@ -1,8 +1,3 @@
-// Datenquelle: PostgreSQL auf AWS RDS
-datasource db {
-  provider = "postgresql"
-}
-
 // Prisma Client Generator
 generator client {
   provider = "prisma-client-js"
@@ -10,36 +5,36 @@ generator client {
 
 // User-Tabelle (mapped auf "users")
 model User {
-  id           String      @id @default(uuid())
-  email        String      @unique
-  passwordHash String      @map("password_hash")
-  createdAt    DateTime    @default(now()) @map("created_at")
-  updatedAt    DateTime    @default(now()) @map("updated_at")
-  lastLogin    DateTime?   @map("last_login")
-  status       String      @default("active")
-  role         String      @default("user")
-  locale       String      @default("en")
-  timezone     String      @default("UTC")
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @default(now()) @map("updated_at")
+  lastLogin    DateTime? @map("last_login")
+  status       String    @default("active")
+  role         String    @default("user")
+  locale       String    @default("en")
+  timezone     String    @default("UTC")
 
-  profile      UserProfile?
+  profile UserProfile?
 
   @@map("users")
 }
 
 // UserProfile-Tabelle (mapped auf "user_profiles")
 model UserProfile {
-  userId       String   @id @map("user_id")
-  firstName    String?  @map("first_name")
-  lastName     String?  @map("last_name")
+  userId       String  @id @map("user_id")
+  firstName    String? @map("first_name")
+  lastName     String? @map("last_name")
   phone        String?
-  companyName  String?  @map("company_name")
-  addressLine1 String?  @map("address_line1")
-  addressLine2 String?  @map("address_line2")
-  postalCode   String?  @map("postal_code")
+  companyName  String? @map("company_name")
+  addressLine1 String? @map("address_line1")
+  addressLine2 String? @map("address_line2")
+  postalCode   String? @map("postal_code")
   city         String?
   country      String?
 
-  user         User     @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   @@map("user_profiles")
 }
