@@ -10,21 +10,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: testdb
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=5s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
       - uses: actions/checkout@v4
 
@@ -37,7 +22,17 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Wait for Postgres (just in case)
+      - name: Start Postgres container
+        run: |
+          docker run -d --rm \
+            --name testing-container \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_PASSWORD=postgres \
+            -e POSTGRES_DB=testdb \
+            -p 5432:5432 \
+            postgres:15
+
+      - name: Wait for Postgres
         run: |
           until pg_isready -h localhost -p 5432; do
             sleep 1
@@ -57,3 +52,7 @@ jobs:
         env:
           DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/testdb?schema=public"
         run: npm test
+
+      - name: Stop Postgres container
+        if: always()
+        run: docker stop testing-container
