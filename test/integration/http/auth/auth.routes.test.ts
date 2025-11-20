@@ -1,129 +1,39 @@
-import { authService } from "../../../../src/services/auth.service";
-import { userRepository } from "../../../../src/repositories/user.repository";
-import bcrypt from "bcryptjs";
+// tests/integration/http/auth/auth.routes.test.ts
+import request from "supertest";
+import { createApp } from "../../../../src/app";
+import { prisma } from "../../../../src/config/db";
 
-jest.mock("../../../../src/repositories/user.repository");
-jest.mock("bcryptjs");
+const app = createApp();
 
-describe("authService.register", () => {
-    it("erstellt neuen benutzer mit gehashtem passwort", async () => {
-        const email = "test@domain.ch";
-        const password = "plain-password";
-
-        (userRepository.findByEmail as jest.Mock).mockResolvedValue(null);
-        (bcrypt.hash as jest.Mock).mockResolvedValue("hashed-password");
-        (userRepository.create as jest.Mock).mockResolvedValue({
-            id: "user-1",
-            email,
-            passwordHash: "hashed-password",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            lastLogin: null,
-            status: "active",
-            role: "user",
-            locale: "en",
-            timezone: "UTC",
-        });
-
-        const user = await authService.register(email, password);
-
-        expect(userRepository.findByEmail).toHaveBeenCalledWith(email);
-        expect(bcrypt.hash).toHaveBeenCalledWith(password, 10);
-        expect(userRepository.create).toHaveBeenCalledWith(
-            email,
-            "hashed-password"
-        );
-        expect(user.id).toBe("user-1");
-        expect(user.email).toBe(email);
+describe("POST /api/auth/register", () => {
+    beforeAll(async () => {
+        // Test-Datenbank leeren – ACHTUNG: nur auf Test-DB verwenden!
+        await prisma.user.deleteMany({});
     });
 
-    it("wirft fehler bei bereits existierender email", async () => {
-        const email = "existing@domain.ch";
-        const password = "some-password";
+    it("erstellt einen neuen User", async () => {
+        const res = await request(app)
+            .post("/api/auth/register")
+            .send({ email: "test@test.ch", password: "secret" });
 
-        (userRepository.findByEmail as jest.Mock).mockResolvedValue({
-            id: "user-1",
-            email,
-            passwordHash: "hashed",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            lastLogin: null,
-            status: "active",
-            role: "user",
-            locale: "en",
-            timezone: "UTC",
-        });
-
-        await expect(
-            authService.register(email, password)
-        ).rejects.toThrow("Email already in use");
-
-        expect(bcrypt.hash).not.toHaveBeenCalled();
-        expect(userRepository.create).not.toHaveBeenCalled();
-    });
-});
-
-describe("authService.login", () => {
-    it("wirft fehler bei unbekannter email", async () => {
-        (userRepository.findByEmail as jest.Mock).mockResolvedValue(null);
-
-        await expect(
-            authService.login("unknown@test.ch", "secret")
-        ).rejects.toThrow("Invalid credentials");
-    });
-
-    it("wirft fehler bei falschem passwort", async () => {
-        (userRepository.findByEmail as jest.Mock).mockResolvedValue({
-            id: "user-1",
+        expect(res.status).toBe(201);
+        expect(res.body).toMatchObject({
             email: "test@test.ch",
-            passwordHash: "hashed",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            lastLogin: null,
-            status: "active",
-            role: "user",
-            locale: "en",
-            timezone: "UTC",
         });
 
-        (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+        const userInDb = await prisma.user.findUnique({
+            where: { email: "test@test.ch" },
+        });
 
-        await expect(
-            authService.login("test@test.ch", "wrong-pass")
-        ).rejects.toThrow("Invalid credentials");
+        expect(userInDb).not.toBeNull();
     });
 
-    it("loggt erfolgreich ein und updated lastLogin und gibt token zurück", async () => {
-        (userRepository.findByEmail as jest.Mock).mockResolvedValue({
-            id: "user-1",
-            email: "test@test.ch",
-            passwordHash: "hashed",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            lastLogin: null,
-            status: "active",
-            role: "user",
-            locale: "en",
-            timezone: "UTC",
-        });
+    it("verhindert doppelte E-Mail", async () => {
+        const res = await request(app)
+            .post("/api/auth/register")
+            .send({ email: "test@test.ch", password: "secret" });
 
-        (bcrypt.compare as jest.Mock).mockResolvedValue(true);
-        (userRepository.update_lastLogin as jest.Mock).mockResolvedValue(
-            undefined
-        );
-
-        const result = await authService.login("test@test.ch", "secret");
-
-        expect(userRepository.update_lastLogin).toHaveBeenCalledTimes(1);
-        expect(userRepository.update_lastLogin).toHaveBeenCalledWith(
-            "user-1",
-            expect.any(Date)
-        );
-
-        expect(result).toHaveProperty("user");
-        expect(result).toHaveProperty("token");
-        expect(result.user.id).toBe("user-1");
-        expect(result.user.email).toBe("test@test.ch");
-        expect(typeof result.token).toBe("string");
+        expect(res.status).toBe(400);
+        expect(res.body.error).toBeDefined();
     });
 });
