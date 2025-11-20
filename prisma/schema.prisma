@@ -1,6 +1,6 @@
-// Datenquelle: PostgreSQL auf AWS RDS
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // Prisma Client Generator
