@@ -30,8 +30,6 @@ test:
 		-p 5432:5432 \
 		postgres
 
-	# Wait for Postgres to be ready
-	until pg_isready -h localhost -p 5432 -U postgres; do sleep 1; done
 
 	$(NPX) $(PRISMA) generate
 	$(NPX) $(PRISMA) migrate deploy
