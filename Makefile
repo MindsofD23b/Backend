@@ -19,7 +19,7 @@ build:
 run: build
 	$(DOCKER) run -d --name $(CONTAINER_NAME) -p 5679:5679 $(IMAGE_NAME):latest
 
-test: 
+test:
 	$(DOCKER) run -d --rm \
 		--name $(TESTING_CONTAINER) \
 		-e POSTGRES_USER=postgres \
@@ -27,11 +27,12 @@ test:
 		-e POSTGRES_DB=testdb \
 		-p 5432:5432 \
 		postgres
-	
+
+	# Wait for Postgres to be ready
+	until pg_isready -h localhost -p 5432 -U postgres; do sleep 1; done
+
 	$(NPX) $(PRISMA) generate
-
 	$(NPX) $(PRISMA) migrate deploy
-
 	$(NPM) test
 
 	$(DOCKER) stop $(TESTING_CONTAINER)
