@@ -10,23 +10,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: testdb
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=5s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Show all files recursively
+        run: ls -R
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -37,23 +27,5 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Wait for Postgres (just in case)
-        run: |
-          until pg_isready -h localhost -p 5432; do
-            sleep 1
-          done
-
-      - name: Generate Prisma Client
-        env:
-          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/testdb?schema=public"
-        run: npx prisma generate
-
-      - name: Run migrations
-        env:
-          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/testdb?schema=public"
-        run: npx prisma migrate deploy
-
-      - name: Run tests
-        env:
-          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/testdb?schema=public"
-        run: npm test
+      - name: Run Make Test
+        run: make test
