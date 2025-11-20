@@ -32,11 +32,19 @@ jobs:
             -p 5432:5432 \
             postgres:15
 
-      - name: Wait for Postgres
+      - name: Wait for Postgres to be ready
         run: |
-          until pg_isready -h localhost -p 5432; do
+          echo "Waiting for Postgres to start..."
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5432 -U postgres; then
+              echo "Postgres is ready!"
+              exit 0
+            fi
+            echo "Waiting 1s..."
             sleep 1
           done
+          echo "Postgres did not start in time."
+          exit 1
 
       - name: Generate Prisma Client
         env:
