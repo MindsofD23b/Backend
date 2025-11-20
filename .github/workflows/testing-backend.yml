@@ -8,31 +8,52 @@ on:
 
 jobs:
   test:
-    name: Node.js Backend Tests
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [22.x]
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-    
-      - name: Set up Node.js ${{ matrix.node-version }}
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20
+          cache: npm
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install deps
+        run: npm ci
+
+      - name: Wait for Postgres (just in case)
+        run: |
+          until pg_isready -h localhost -p 5432; do
+            sleep 1
+          done
 
       - name: Generate Prisma Client
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/testdb?schema=public"
         run: npx prisma generate
-      
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/testdb?schema=public"
+        run: npx prisma migrate deploy
+
       - name: Run tests
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/testdb?schema=public"
         run: npm test
