@@ -9,7 +9,19 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: Testing
 
+    env:
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      JWT_EXPIRES_IN: ${{ vars.JWT_EXPIRES_IN }}
+      SMTP_FROM: ${{ vars.SMTP_FROM }}
+      SMTP_HOST: ${{ vars.SMTP_HOST }}
+      SMTP_PORT: ${{ vars.SMTP_PORT }}
+      SMTP_SECURE: ${{ vars.SMTP_SECURE }}
+      SMTP_USER: ${{ vars.SMTP_USER }}
+      API_BASE_URL: ${{ vars.API_BASE_URL }}
+      APP_BASE_URL: ${{ vars.APP_BASE_URL }}
+      
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,4 +36,5 @@ jobs:
         run: npm install
 
       - name: Run Make Test
+      
         run: make test

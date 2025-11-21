@@ -22,7 +22,7 @@ run: build
 export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/testdb?schema=public
 export JWT_SECRET="TESTSECRET"
 
-test:
+test: 
 	$(DOCKER) run -d --rm \
 		--name $(TESTING_CONTAINER) \
 		-e POSTGRES_USER=postgres \
@@ -36,6 +36,10 @@ test:
 	$(NPX) $(PRISMA) migrate deploy
 	$(NPM) test
 
+	$(DOCKER) stop $(TESTING_CONTAINER)
+
+
+reset:
 	$(DOCKER) stop $(TESTING_CONTAINER)
 
 

@@ -1,11 +1,8 @@
 import bcrypt from "bcryptjs";
 import { userRepository } from "../repositories/user.repository";
-import { userProfileRepository } from "../repositories/userProfile.repository";
 import { signEmailVerificationToken, signAccessToken, verifyEmailVerificationToken  } from "../core/security/jwt";
 import {env} from "../config/env";
 import { sendVerificationEmail } from "./mail.service";
-
-
 
 
 export const authService = {
@@ -22,8 +19,6 @@ export const authService = {
             email: user.email,
             type: "email_verification"
         })
-
-        await userProfileRepository.upsertForUser(user.id, {});
 
         const verificationLink = `${env.apiBaseUrl}/api/auth/verify-email?token=${encodeURIComponent(token)}`;
 
