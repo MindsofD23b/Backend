@@ -21,7 +21,6 @@ run: build
 
 export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/testdb?schema=public
 export JWT_SECRET="TESTSECRET"
-export 
 
 test: 
 	$(DOCKER) run -d --rm \
