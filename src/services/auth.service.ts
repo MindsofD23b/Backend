@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
 import { userRepository } from "../repositories/user.repository";
-import { signEmailVerificationToken, signAccessToken, verifyEmailVerificationToken  } from "../core/security/jwt";
-import {env} from "../config/env";
+import { signEmailVerificationToken, verifyEmailVerificationToken } from "../core/security/jwt";
+import { env } from "../config/env";
 import { sendVerificationEmail } from "./mail.service";
+import { User } from "@prisma/client";
 
 
 
@@ -39,7 +40,7 @@ export const authService = {
             throw new Error("user not found");
         }
 
-        if (user.status === "active" && (user as any).emailVerifiedAt) {
+        if (user.status === "active" && (user as User).emailVerifiedAt) {
             return user;
         }
 

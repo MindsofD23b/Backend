@@ -27,7 +27,7 @@ export const userRepository = {
                 status: "active",
                 emailVerifiedAt: new Date(),
                 updatedAt: now,
-            } as any,
+            } as { status: string, emailVerifiedAt: Date, updatedAt: Date },
         });
     },
 };

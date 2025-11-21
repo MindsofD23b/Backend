@@ -16,6 +16,8 @@ describe("POST /api/auth/register", () => {
             .post("/api/auth/register")
             .send({ email: "test@test.ch", password: "secret" });
 
+        console.log(res.body)
+
         expect(res.status).toBe(201);
         expect(res.body).toMatchObject({
             email: "test@test.ch",
