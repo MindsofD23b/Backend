@@ -13,10 +13,10 @@ export interface EmailVerificationPayload {
     type: "email_verification"
 }
 
-const secret: Secret = env.jwtSecret; 
+const secret: Secret = env.jwtSecret;
 
 export function signAccessToken(payload: JwtPayload): string {
-      // explizit als Secret
+    // explizit als Secret
     const options: SignOptions = {
         expiresIn: env.jwtExpiresIn as SignOptions["expiresIn"],
     };
@@ -27,7 +27,7 @@ export function verifyAccessToken(token: string): JwtPayload {
     const decoded = jwt.verify(token, secret);
 
     if (typeof decoded === "string") {
-        throw new Error("Invalid token payload");
+        throw new TypeError("Invalid token payload");
     }
 
     return decoded as JwtPayload;
@@ -44,7 +44,7 @@ export function signEmailVerificationToken(payload: EmailVerificationPayload): s
 export function verifyEmailVerificationToken(token: string): EmailVerificationPayload {
     const decoded = jwt.verify(token, secret);
     if (typeof decoded === "string") {
-        throw new Error("Invalid token payload");
+        throw new TypeError("Invalid token payload");
     }
     const payload = decoded as EmailVerificationPayload;
     if (payload.type !== "email_verification") {

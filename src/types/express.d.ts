@@ -1,5 +1,3 @@
-import type { JwtPayload } from "../core/security/jwt";
-
 declare global {
   namespace Express {
     interface UserPayload {
@@ -8,11 +6,10 @@ declare global {
       role: string;
     }
 
-    // Alternativ könntest du hier auch JwtPayload direkt nutzen
     interface Request {
       user?: UserPayload;
     }
   }
 }
 
-export {};
+export { };
