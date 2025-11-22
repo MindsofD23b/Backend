@@ -12,22 +12,9 @@ OPTIONS:
     "chore"
 DEFAULT: "feat"
 
-QUESTION: "Scope (optional)"
-OPTIONAL: True
-INCLUDES: brackets
-TYPE: string
-ID: scope
-DEFAULT: ""
-
 QUESTION: "Short summary"
 TYPE: string
 ID: summary
 
-QUESTION: "Issue or PR number (optional, e.g., #123)"
-TYPE: number
-OPTIONAL: True
-ID: issue
-INCLUDES: brackets
-
 BUILD:
-"[{type}{scope}] {summary} {issue}"
+"[{type}] {summary}"

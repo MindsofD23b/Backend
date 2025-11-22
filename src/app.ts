@@ -6,8 +6,8 @@ import { router } from "./routes";
 export const createApp = () => {
     const app = express();
 
-    app.use(cors());
     app.use(express.json());
+    app.use(cors());
 
     app.use("/api", router);
 
