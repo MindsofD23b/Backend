@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken } from '../core/security/jwt';
 import { userRepository } from '../repositories/user.repository';
-import {prisma} from "../config/db";
 export async function verifiedMiddleware(
     req: Request,
     res: Response,
@@ -13,13 +12,13 @@ export async function verifiedMiddleware(
     }
     const token = authHeader.substring("Bearer ".length);
 
-    try{
-        const payload = verifyAccessToken(token); // { sub, email, role, verified }
-            req.user = {
-                id: payload.sub,
-                email: payload.email,
-                role: payload.role,
-            };
+    try {
+        const payload = verifyAccessToken(token);
+        req.user = {
+            id: payload.sub,
+            email: payload.email,
+            role: payload.role,
+        };
         const user = await userRepository.findById(payload.sub);
         if (!user) {
             return res.status(401).json({ error: "User not found" });
@@ -27,10 +26,10 @@ export async function verifiedMiddleware(
         if (user.emailVerifiedAt == null) {
             return res.status(403).json({ error: "Email not verified" });
         }
-        else{
+        else {
             next();
         }
-    } catch (err) {
-        return res.status(401).json({ error: "Invalid token" });
+    } catch (err: unknown) {
+        return res.status(401).json({ error: "Invalid token", err });
     }
 }
