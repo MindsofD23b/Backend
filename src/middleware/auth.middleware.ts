@@ -14,7 +14,7 @@ export function authMiddleware(
   const token = authHeader.substring("Bearer ".length);
 
   try {
-    const payload = verifyAccessToken(token); // { sub, email, role }
+    const payload = verifyAccessToken(token);
     req.user = {
       id: payload.sub,
       email: payload.email,
@@ -22,6 +22,6 @@ export function authMiddleware(
     };
     next();
   } catch (err) {
-    return res.status(401).json({ error: "Invalid token" });
+    return res.status(401).json({ error: "Invalid token", errmsg: err });
   }
 }

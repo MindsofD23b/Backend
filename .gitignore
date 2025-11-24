@@ -6,3 +6,5 @@
 /src/generated/prisma
 
 package-lock.json
+
+/coverage

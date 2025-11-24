@@ -8,6 +8,12 @@ export default {
     moduleNameMapper: {
         "^src/(.*)$": "<rootDir>/src/$1",
     },
+
+    collectCoverage: true,
+    coverageDirectory: "coverage",
+    coverageReporters: ["lcov", "text", "cobertura"],
+    collectCoverageFrom: ["src/**/*.ts"],
+
     clearMocks: true,
     resetMocks: true,
     restoreMocks: true,

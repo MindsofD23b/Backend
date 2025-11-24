@@ -1,4 +1,4 @@
-.PHONY: test 
+.PHONY: test test-withoutsq
 
 # Docker
 DOCKER = docker
@@ -13,7 +13,7 @@ TESTING_CONTAINER = test-postgres
 
 all: run
 
-build: 
+build: test
 	$(DOCKER) build -t $(IMAGE_NAME) .
 
 run: build
@@ -22,7 +22,10 @@ run: build
 export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/testdb?schema=public
 export JWT_SECRET="TESTSECRET"
 
-test: 
+lint:
+	$(NPM) run lint
+
+test-run: lint
 	$(DOCKER) run -d --rm \
 		--name $(TESTING_CONTAINER) \
 		-e POSTGRES_USER=postgres \
@@ -34,10 +37,28 @@ test:
 
 	$(NPX) $(PRISMA) generate
 	$(NPX) $(PRISMA) migrate deploy
-	$(NPM) test
+	$(NPM) run test:coverage
 
 	$(DOCKER) stop $(TESTING_CONTAINER)
 
+test: test-run coverage/lcov.info
+	$(DOCKER) run --rm \
+		-e SONAR_HOST_URL="http://sonarqube:9000" \
+		-e SONAR_SCANNER_OPTS="-Dsonar.projectKey=Nethr" \
+		-e SONAR_TOKEN="sqa_6222ed2405055267669af129dd3f3dd597803adf" \
+		--network sonar-net \
+		-v .:/usr/src \
+		-u $(id -u):$(id -g) \
+		sonarsource/sonar-scanner-cli
+
+
+clean-coverage:
+	$(NPX) rimraf coverage
+
+test-withoutsq:
+	$(MAKE) test-run
+
+	$(NPX) rimraf coverage
 
 reset:
 	$(DOCKER) stop $(TESTING_CONTAINER)
