@@ -1,5 +1,5 @@
 /** @type {import('jest').Config} */
-module.exports = {
+export default {
     preset: "ts-jest",
     testEnvironment: "node",
     rootDir: ".",
@@ -8,6 +8,12 @@ module.exports = {
     moduleNameMapper: {
         "^src/(.*)$": "<rootDir>/src/$1",
     },
+
+    collectCoverage: true,
+    coverageDirectory: "coverage",
+    coverageReporters: ["lcov", "text", "cobertura"],
+    collectCoverageFrom: ["src/**/*.ts"],
+
     clearMocks: true,
     resetMocks: true,
     restoreMocks: true,

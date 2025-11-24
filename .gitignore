@@ -4,3 +4,7 @@
 ./env
 *env
 /src/generated/prisma
+
+package-lock.json
+
+/coverage
