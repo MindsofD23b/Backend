@@ -4,10 +4,14 @@ import { env } from "./config/env";
 import { router } from "./routes";
 
 export const createApp = () => {
+    const corsOptions = {
+        origin: '*'
+    };
+
     const app = express();
 
     app.use(express.json());
-    app.use(cors());
+    app.use(cors(corsOptions));
 
     app.use("/api", router);
 
