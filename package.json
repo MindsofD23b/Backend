@@ -4,13 +4,9 @@
 	"description": "",
 	"main": "server.js",
 	"scripts": {
-		"dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+		"dev": "nodemon",
 		"prisma:migrate": "prisma migrate dev",
 		"prisma:generate": "prisma generate",
-		"test": "jest",
-		"test:coverage": "jest --coverage",
-		"test:watch": "jest --watch",
-		"test:integration": "jest tests/integration",
 		"start": "node server.js",
 		"lint": "eslint",
 		"sonarqube": "docker compose up -d"
@@ -19,6 +15,9 @@
 	"author": "",
 	"license": "ISC",
 	"type": "module",
+	"ts-node": {
+		"esm": true
+	},
 	"devDependencies": {
 		"@eslint/js": "^9.39.1",
 		"@types/bcryptjs": "^3.0.0",
@@ -27,6 +26,7 @@
 		"@types/jest": "^30.0.0",
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/nodemailer": "^7.0.4",
+		"@types/nodemon": "^1.19.6",
 		"@types/pg": "^8.15.6",
 		"@types/supertest": "^6.0.3",
 		"eslint": "^9.39.1",
@@ -50,6 +50,8 @@
 		"express": "^5.1.0",
 		"jsonwebtoken": "^9.0.2",
 		"nodemailer": "^7.0.10",
+		"nodemon": "^3.1.11",
+		"ts-node": "^10.9.2",
 		"typescript-eslint": "^8.47.0"
 	}
 }

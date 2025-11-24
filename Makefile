@@ -10,6 +10,7 @@ PRISMA = prisma
 NPX = npx
 NPM = npm
 TESTING_CONTAINER = test-postgres
+JEST = jest
 
 all: run
 
@@ -37,7 +38,7 @@ test-run: lint
 
 	$(NPX) $(PRISMA) generate
 	$(NPX) $(PRISMA) migrate deploy
-	$(NPM) run test:coverage
+	$(NPX) $(JEST) --coverage
 
 	$(DOCKER) stop $(TESTING_CONTAINER)
 

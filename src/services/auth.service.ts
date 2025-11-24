@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
-import { userRepository } from "../repositories/user.repository";
-import { signEmailVerificationToken, verifyEmailVerificationToken } from "../core/security/jwt";
-import { env } from "../config/env";
-import { sendVerificationEmail } from "./mail.service";
+import { userRepository } from "../repositories/user.repository.ts";
+import { signEmailVerificationToken, verifyEmailVerificationToken } from "../core/security/jwt.ts";
+import { env } from "../config/env.ts";
+import { sendVerificationEmail } from "./mail.service.ts";
 
 
 export const authService = {

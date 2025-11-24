@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { userService } from "../services/user.service";
+import type { Request, Response, NextFunction } from "express";
+import { userService } from "../services/user.service.ts";
 
 export const getMyProfileController = async (
     req: Request,

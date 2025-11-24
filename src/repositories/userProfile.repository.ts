@@ -1,4 +1,4 @@
-import { prisma } from "../config/db";
+import { prisma } from "../config/db.ts";
 
 export const userProfileRepository = {
     findByUserId(userId: string) {

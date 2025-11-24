@@ -1,5 +1,5 @@
-import { userRepository } from "../repositories/user.repository";
-import { userProfileRepository } from "../repositories/userProfile.repository";
+import { userRepository } from "../repositories/user.repository.ts";
+import { userProfileRepository } from "../repositories/userProfile.repository.ts";
 
 
 export const userService = {
@@ -10,9 +10,9 @@ export const userService = {
             throw new Error("User not found");
         }
         const profile = await userProfileRepository.findByUserId(userId);
-        return { 
-            user, 
-            profile 
+        return {
+            user,
+            profile
         };
     },
     async updateProfile(userId: string, data: {
@@ -34,5 +34,5 @@ export const userService = {
 
         return profile;
     },
-    
+
 }

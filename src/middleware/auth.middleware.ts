@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyAccessToken } from "../core/security/jwt";
+import { verifyAccessToken } from "../core/security/jwt.ts";
 
 export function authMiddleware(
   req: Request,

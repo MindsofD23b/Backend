@@ -10,7 +10,9 @@
         "outDir": "dist",
         "resolveJsonModule": true,
         "forceConsistentCasingInFileNames": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "allowImportingTsExtensions": true,
+        "noEmit": true,
     },
     "include": [
         "src",

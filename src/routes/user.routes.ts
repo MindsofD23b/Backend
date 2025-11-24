@@ -1,5 +1,5 @@
-import {Router} from "express";
-import { authMiddleware } from "../middleware/auth.middleware";
+import { Router } from "express";
+import { authMiddleware } from "../middleware/auth.middleware.ts";
 
 import {
     getMyProfileController,
