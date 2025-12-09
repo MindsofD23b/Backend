@@ -1,5 +1,9 @@
 import bcrypt from "bcryptjs";
-import { userRepository } from "../repositories/user.repository";
+import { userRepository } from "../repositories/user.repository.ts";
+import { signEmailVerificationToken, verifyEmailVerificationToken } from "../core/security/jwt.ts";
+import { env } from "../config/env.ts";
+import { sendVerificationEmail } from "./mail.service.ts";
+
 
 export const authService = {
     async register(email: string, password: string) {
@@ -9,8 +13,37 @@ export const authService = {
         }
         const hash = await bcrypt.hash(password, 10);
         const user = await userRepository.create(email, hash);
+
+        const token = signEmailVerificationToken({
+            sub: user.id,
+            email: user.email,
+            type: "email_verification"
+        })
+
+        const verificationLink = `${env.apiBaseUrl}/api/auth/verify-email?token=${encodeURIComponent(token)}`;
+
+        await sendVerificationEmail(user.email, verificationLink);
+
+
         return user;
     },
+
+
+    async verifyEmail(token: string) {
+        const payload = verifyEmailVerificationToken(token);
+
+        const user = await userRepository.findById(payload.sub);
+        if (!user) {
+            throw new Error("user not found");
+        }
+
+        if (user.status === "active" && user.emailVerifiedAt) {
+            return user;
+        }
+
+        return userRepository.verifyEmail(user.id);
+    },
+
 
     async login(email: string, password: string) {
         const user = await userRepository.findByEmail(email);
@@ -27,7 +60,7 @@ export const authService = {
 
     async getUserByEmail(email: string) {
         const user = await userRepository.findByEmail(email);
-        if (!user){
+        if (!user) {
             throw new Error("User not found");
         }
         return user;

@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { authService } from "../services/auth.service";
+import type { Request, Response, NextFunction } from "express";
+import { authService } from "../services/auth.service.ts";
+import { env } from "../config/env.ts";
 
 export const registerController = async (
     req: Request,
@@ -14,7 +15,7 @@ export const registerController = async (
         if (err instanceof Error) {
             res.status(400).json({ error: err.message });
         } else {
-            res.status(400).json({ error: "Unknown error" });
+            res.status(400).json({ error: "Unknown error", err });
         }
     }
 };
@@ -50,7 +51,27 @@ export const getUserByEmailController = async (
         if (err instanceof Error) {
             res.status(400).json({ error: err.message });
         } else {
-            res.status(400).json({ error: "Unknown error" });
+            res.status(400).json({ error: "Unknown error", err });
+        }
+    }
+}
+
+export const verifyEmailController = async (
+    req: Request,
+    res: Response,
+    _next: NextFunction
+) => {
+    try {
+        const token = req.query.token;
+
+        await authService.verifyEmail(token as string);
+
+        res.redirect(env.appBaseUrl)
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            res.status(400).json({ error: err.message });
+        } else {
+            res.status(400).json({ error: "Unknown error", err });
         }
     }
 }

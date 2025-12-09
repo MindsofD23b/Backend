@@ -15,13 +15,13 @@ describe("authService.login", () => {
 
     it("wirft fehler bei falschem passwort", async () => {
         (userRepository.findByEmail as jest.Mock).mockResolvedValue({
-        id: "user-1",
-        email: "test@test.ch",
-        passwordHash: "hashed",
-    });
+            id: "user-1",
+            email: "test@test.ch",
+            passwordHash: "hashed",
+        });
         (bcrypt.compare as jest.Mock).mockResolvedValue(false);
         await expect(
-            authService.login("test@test.ch", "wrong") 
+            authService.login("test@test.ch", "wrong")
         ).rejects.toThrow("Invalid credentials");
     });
 

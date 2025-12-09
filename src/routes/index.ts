@@ -1,10 +1,6 @@
 import { Router } from "express";
-import { authRouter } from "./auth.routes";
-// import { userRouter } from "./user.routes";
-// import { serverRouter } from "./server.routes";
+import { authRouter } from "./auth.routes.ts";
 
 export const router = Router();
 
 router.use("/auth", authRouter);
-// router.use("/users", userRouter);
-// router.use("/servers", serverRouter);
