@@ -5,7 +5,7 @@ import { router } from "./routes/index";
 
 export const createApp = () => {
     const corsOptions = {
-        origin: 'http://localhost'
+        origin: 'http://localhost:3000'
     };
 
     const app = express();
