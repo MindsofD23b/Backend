@@ -1,0 +1,13 @@
+services:
+  dind:
+    image: docker:24-dind
+    privileged: true
+    volumes:
+      - docker-data:/var/lib/docker
+
+  app:
+    build: ./app
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - dind

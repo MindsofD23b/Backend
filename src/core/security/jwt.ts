@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import type { Secret, SignOptions } from "jsonwebtoken";
-import { env } from '../../config/env.ts';
+import { env } from '../../config/env';
 
 export interface JwtPayload {
     sub: string;

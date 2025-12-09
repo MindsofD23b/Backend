@@ -2,22 +2,20 @@
 	"name": "srv",
 	"version": "1.0.0",
 	"description": "",
-	"main": "server.js",
+	"main": "src/server.ts",
 	"scripts": {
-		"dev": "nodemon",
+		"dev": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
 		"prisma:migrate": "prisma migrate dev",
 		"prisma:generate": "prisma generate",
-		"start": "node server.js",
+		"start": "node dist/server.js",
 		"lint": "eslint",
+		"build": "tsc",
 		"sonarqube": "docker compose up -d"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"type": "module",
-	"ts-node": {
-		"esm": true
-	},
+	"type": "commonjs",
 	"devDependencies": {
 		"@eslint/js": "^9.39.1",
 		"@types/bcryptjs": "^3.0.0",
@@ -37,6 +35,8 @@
 		"rimraf": "^6.1.2",
 		"supertest": "^7.1.4",
 		"ts-jest": "^29.4.5",
+		"ts-node": "^10.9.2",
+		"tsconfig-paths": "^4.2.0",
 		"typescript": "^5.9.3"
 	},
 	"dependencies": {
@@ -51,7 +51,6 @@
 		"jsonwebtoken": "^9.0.2",
 		"nodemailer": "^7.0.10",
 		"nodemon": "^3.1.11",
-		"ts-node": "^10.9.2",
 		"typescript-eslint": "^8.47.0"
 	}
 }

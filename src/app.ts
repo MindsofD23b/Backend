@@ -1,11 +1,11 @@
 import express from "express";
 import cors from "cors";
-import { env } from "./config/env.ts";
-import { router } from "./routes/index.ts";
+import { env } from "./config/env";
+import { router } from "./routes/index";
 
 export const createApp = () => {
     const corsOptions = {
-        origin: '*'
+        origin: 'http://localhost:3000'
     };
 
     const app = express();
