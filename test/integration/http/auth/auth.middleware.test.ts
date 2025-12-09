@@ -17,22 +17,14 @@ describe("Auth Middleware Test", () => {
         expect(res.body.error).toBeDefined();
     });
 
-    it("Test if auth works with incorrect token", async () => {
-        const token = 638;
-
-        const res = await request(app)
-            .get('/api/user/me/profile')
-            .set('Authorization', `Bearer ${token}`);
-
-        expect(res.status).toBe(401);
-        expect(res.body.error).toBeDefined();
-        expect(res.body.errmsg).toBeDefined();
-    });
 
     it("Test if auth works with a valid token", async () => {
+        // const register = await request(app)
         const login = await request(app)
             .post("/api/auth/login")
             .send({ email: "test@test.com", password: "secret" });
+
+        console.log(login.body)
 
         const token = login.body.token;
 
@@ -58,5 +50,18 @@ describe("Auth Middleware Test", () => {
             emailVerifiedAt: null,
         });
     });
+
+    it("Test if auth works with incorrect token", async () => {
+        const token = 638;
+
+        const res = await request(app)
+            .get('/api/user/me/profile')
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(res.status).toBe(401);
+        expect(res.body.error).toBeDefined();
+        expect(res.body.errmsg).toBeDefined();
+    });
+
 
 });
