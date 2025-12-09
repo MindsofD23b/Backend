@@ -3,14 +3,17 @@ FROM node:20-alpine AS builder
 WORKDIR /src
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install
+
 
 COPY . .
+
+RUN npm run build
 
 
 FROM node:20-alpine
 
-WORKDIR /src
+WORKDIR /
 
 
 COPY --from=builder /src/package*.json ./
@@ -22,4 +25,4 @@ ENV PORT=5679
 EXPOSE 5679
 
 
-CMD ["node", "server.js"]
+CMD ["node", "dist/server.js"]

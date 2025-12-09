@@ -1,5 +1,5 @@
-import { userRepository } from "../repositories/user.repository.ts";
-import { userProfileRepository } from "../repositories/userProfile.repository.ts";
+import { userRepository } from "../repositories/user.repository";
+import { userProfileRepository } from "../repositories/userProfile.repository";
 
 
 export const userService = {

@@ -4,12 +4,14 @@ import { createApp } from "../../../../src/app";
 import { prisma } from "../../../../src/config/db";
 import { signEmailVerificationToken } from "../../../../src/core/security/jwt";
 import { env } from "../../../../src/config/env";
+import { Logger } from "../../../../src/utils/logger";
 
 const app = createApp();
 
 describe("POST /api/auth/register", () => {
     beforeAll(async () => {
         await prisma.user.deleteMany({});
+        Logger.debugEnabled = false;
     });
 
     it("erstellt einen neuen User", async () => {

@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyAccessToken } from "../core/security/jwt.ts";
+import { verifyAccessToken } from "../core/security/jwt";
 
 export function authMiddleware(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
+
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized" });

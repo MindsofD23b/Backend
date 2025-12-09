@@ -4,6 +4,7 @@
 DOCKER = docker
 IMAGE_NAME = nethr-backend
 CONTAINER_NAME = Nethr-server
+DB_CONTAINER = nethr-srv-db
 
 # Testing
 PRISMA = prisma
@@ -16,6 +17,26 @@ all: run
 
 build: test
 	$(DOCKER) build -t $(IMAGE_NAME) .
+
+	$(DOCKER) run -d --rm \
+		--name $(DB_CONTAINER) \
+		-e POSTGRES_USER=postgres \
+		-e POSTGRES_PASSWORD=postgres \
+		-e POSTGRES_DB=testdb \
+		-p 5432:5432 \
+		postgres
+	
+frbuild: 
+	$(DOCKER) build -t $(IMAGE_NAME) .
+
+	$(DOCKER) run -d --rm \
+		--name $(DB_CONTAINER) \
+		-e POSTGRES_USER=postgres \
+		-e POSTGRES_PASSWORD=postgres \
+		-e POSTGRES_DB=testdb \
+		-p 5432:5432 \
+		postgres
+	
 
 run: build
 	$(DOCKER) run -d --name $(CONTAINER_NAME) -p 5679:5679 $(IMAGE_NAME):latest
@@ -61,6 +82,9 @@ test-withoutsq:
 
 	$(NPX) rimraf coverage
 
+sonar:
+	$(DOCKER) compose up -d
+
 reset:
 	$(DOCKER) stop $(TESTING_CONTAINER)
 
@@ -69,3 +93,4 @@ clean:
 	$(DOCKER) stop $(CONTAINER_NAME)
 	$(DOCKER) rm $(CONTAINER_NAME)
 	$(DOCKER) rmi $(IMAGE_NAME)
+
