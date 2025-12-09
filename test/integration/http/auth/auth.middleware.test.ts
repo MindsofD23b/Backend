@@ -19,10 +19,13 @@ describe("Auth Middleware Test", () => {
 
 
     it("Test if auth works with a valid token", async () => {
-        // const register = await request(app)
+        await request(app)
+            .post("/api/auth/register")
+            .send({ email: "test@middleware.com", password: "secret" });
+
         const login = await request(app)
             .post("/api/auth/login")
-            .send({ email: "test@test.com", password: "secret" });
+            .send({ email: "test@middleware.com", password: "secret" });
 
         console.log(login.body)
 
@@ -38,7 +41,7 @@ describe("Auth Middleware Test", () => {
 
         expect(res.body.user).toMatchObject({
             id: expect.any(String),
-            email: "test@test.com",
+            email: "test@middleware.com",
             status: "active",
             role: "user",
             locale: "en",
