@@ -36,6 +36,8 @@ describe("Auth Middleware Test", () => {
 
         const token = login.body.token;
 
+        console.log(token)
+
         const res = await request(app)
             .get('/api/user/me/profile')
             .set('Authorization', `Bearer ${token}`);
