@@ -10,11 +10,14 @@
         "outDir": "dist",
         "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "typeRoots": [
+            "./src/types",
+            "./node_modules/@types"
+        ]
     },
     "include": [
-        "src",
-        "src/types"
+        "src"
     ],
     "exclude": [
         "node_modules",

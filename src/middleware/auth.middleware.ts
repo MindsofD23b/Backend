@@ -1,8 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
+import { SecureRequest } from "../types/request";
 import { verifyAccessToken } from "../core/security/jwt";
 
 export function authMiddleware(
-  req: Request,
+  req: SecureRequest,
   res: Response,
   next: NextFunction
 ) {

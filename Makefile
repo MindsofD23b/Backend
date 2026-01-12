@@ -15,7 +15,7 @@ JEST = jest
 
 all: run
 
-build: test
+build: test-run
 	$(DOCKER) build -t $(IMAGE_NAME) .
 
 	$(DOCKER) run -d --rm \
