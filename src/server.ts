@@ -5,5 +5,6 @@ import { env } from "./config/env";
 const app = createApp();
 
 app.listen(env.port, () => {
-    Logger.info(`http://localhost:${env.port}`)
+    Logger.info(`http://localhost:${env.port}`);
+    console.log(`http://localhost:${env.port}`);
 });
