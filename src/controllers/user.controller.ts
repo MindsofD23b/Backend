@@ -30,14 +30,16 @@ export const updateMyProfileController = async (
 ) => {
     try {
         const userId = req.user!.id;
-        const profileData = req.body;
-        const result = await userService.updateProfile(userId, profileData);
-        res.json(result);
-        Logger.success(`${userId} has updated their profile`)
+        const payload = req.body;
+
+        const profile = await userService.updateProfile(userId, payload);
+
+        res.json(profile);
+        Logger.success(`${userId} updated profile`);
     } catch (err) {
         if (err instanceof Error) {
             res.status(400).json({ error: err.message });
-            Logger.error(`${err.message}`)
+            Logger.error(err.message);
         } else {
             res.status(400).json({ error: "Unknown error" });
         }

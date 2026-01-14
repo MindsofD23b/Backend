@@ -40,5 +40,11 @@ export const serverRepository = {
                 status: newState,
             },
         });
-    }
+    },
+
+    countByUserId(userId: string) {
+        return prisma.server.count({
+            where: { ownerId: userId },
+        });
+    },
 };

@@ -112,7 +112,7 @@ export const getServersController = async (
 };
 
 export const deleteServerController = async (
-    req: Request,
+    req: Request<{ id: string }>,
     res: Response,
     _next: NextFunction
 ) => {
